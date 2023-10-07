@@ -1,9 +1,6 @@
 from datetime import date, timedelta
 from collections import defaultdict
 
-# global dict_weekday 
-# dict_weekday = {'Monday': '', 'Tuesday': '', 'Wednesday': '', 'Thursday': '', 'Friday':'', 'Saturday': '', 'Sunday': ''}
-
 def get_period(start_day:date, days:int ):
     result ={}
     for _ in range(days+1):
@@ -34,20 +31,10 @@ def get_birthdays_per_week(users:list)-> list:
             else:
                 result[new_year_bd.strftime("%A")].append(us["name"])
 
-            # for key, value in dict_weekday.items():
-            #     if wd == 'Saturday'or key == 'Sunda':
-            #         wd ='Monday'
-            #     if key == wd: 
-            #         if not value: 
-            #             dict_weekday[key]= value + us['name']
-            #         else:
-            #             dict_weekday[key]= value + ', ' + us['name']
+            
     
     return result
-    # for key, value in dict_weekday.items():
-    #     if value:
-    #         print(f'{key}: {value}')
-  
+    
 
 
 if __name__ == "__main__":
@@ -60,7 +47,8 @@ if __name__ == "__main__":
              {'name': 'Mia', 'birthday': date(2000, 10, 12)},
              {'name': 'Vlad', 'birthday': date(1999, 10, 11)}
              ]
-    print(get_birthdays_per_week(users))
+    for key, value in get_birthdays_per_week(users).items():
+        print(f'{key}: {" ".join(value)}')
     
 
 
