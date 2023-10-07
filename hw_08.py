@@ -1,7 +1,8 @@
 from datetime import date, timedelta
+from collections import defaultdict
 
-global dict_weekday 
-dict_weekday = {'Monday': '', 'Tuesday': '', 'Wednesday': '', 'Thursday': '', 'Friday':'', 'Saturday': '', 'Sunday': ''}
+# global dict_weekday 
+# dict_weekday = {'Monday': '', 'Tuesday': '', 'Wednesday': '', 'Thursday': '', 'Friday':'', 'Saturday': '', 'Sunday': ''}
 
 def get_period(start_day:date, days:int ):
     result ={}
@@ -13,8 +14,9 @@ def get_period(start_day:date, days:int ):
 
 
 def get_birthdays_per_week(users:list)-> list:
+    result = defaultdict(list)
     #start_day = date.today()
-    start_day = date(2023,10,9)
+    start_day = date.today()
     if not start_day.weekday():
         list_period = get_period(start_day-timedelta(2),7)
     else:
@@ -23,23 +25,28 @@ def get_birthdays_per_week(users:list)-> list:
     for us in users:
         bd:date = us['birthday']
         
-        if (bd.day,bd.month) in list(list_period):
-            new_year_bd= date(list_period[(bd.day,bd.month)],bd.month,bd.day)
-            wd = new_year_bd.strftime('%A')
+        if (bd.day, bd.month) in list(list_period):
+            new_year_bd = bd.replace(year=list_period[bd.day, bd.month]) #date(list_period[(bd.day,bd.month)],bd.month,bd.day)
+            wd = new_year_bd.weekday() # new_year_bd.strftime('%A')
+            
+            if wd in (5, 6):
+                result["Monday"].append(us["name"])
+            else:
+                result[new_year_bd.strftime("%A")].append(us["name"])
 
-            for key, value in dict_weekday.items():
-                if wd == 'Saturday'or key == 'Sunda':
-                    wd ='Monday'
-                if key == wd: 
-                    if not value: 
-                        dict_weekday[key]= value + us['name']
-                    else:
-                        dict_weekday[key]= value + ', ' + us['name']
+            # for key, value in dict_weekday.items():
+            #     if wd == 'Saturday'or key == 'Sunda':
+            #         wd ='Monday'
+            #     if key == wd: 
+            #         if not value: 
+            #             dict_weekday[key]= value + us['name']
+            #         else:
+            #             dict_weekday[key]= value + ', ' + us['name']
     
-    
-    for key, value in dict_weekday.items():
-        if value:
-            print(f'{key}: {value}')
+    return result
+    # for key, value in dict_weekday.items():
+    #     if value:
+    #         print(f'{key}: {value}')
   
 
 
@@ -53,7 +60,7 @@ if __name__ == "__main__":
              {'name': 'Mia', 'birthday': date(2000, 10, 12)},
              {'name': 'Vlad', 'birthday': date(1999, 10, 11)}
              ]
-    get_birthdays_per_week(users)
+    print(get_birthdays_per_week(users))
     
 
 
